@@ -2,6 +2,8 @@ import express from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
+// https://hackaton2-node.herokuapp.com/  api url
+
 dotenv.config(); //all keys it will put in process.env
 
 const app=express();
@@ -23,7 +25,7 @@ async function createConnection() {
 const client=createConnection();
 
 app.get("/",(request,response)=>{
-    response.send("hello😊😊");
+    response.send("hello😊😊!!!");
 })
 
 app.listen(PORT,()=>{console.log("App started in PORT:",PORT)});
