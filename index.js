@@ -6,7 +6,7 @@ dotenv.config(); //all keys it will put in process.env
 
 const app=express();
 
-const PORT=9000;
+const PORT=process.env.PORT;
 
 app.use(express.json()) //inbuild middleware every request in app body is parse as json
 
