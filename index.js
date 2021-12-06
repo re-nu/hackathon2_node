@@ -65,7 +65,7 @@ app.post("/Add-theater",async(request,response)=>{
 
 app.delete("/delete-theater/:id",async(request,response)=>{
     const{id}=request.params;
-
+sa
     const result=await client.db("b28wd").collection("theaters").deleteOne({_id:ObjectID(id)});
     response.send(result);
 })
