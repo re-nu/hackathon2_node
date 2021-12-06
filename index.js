@@ -2,7 +2,7 @@ import express from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { ObjectID } from 'bson';
+import { ObjectId, ObjectID } from 'bson';
 
 // https://hackaton2-node.herokuapp.com/  api url
 
@@ -45,9 +45,9 @@ app.get("/theaters",async(request,response)=>{
     response.send(result);
 })
 
-app.get("/theater/:name",async(request,response)=>{
-    const{name}=request.params
-    const result= await client.db("b28wd").collection("theaters").findOne({name:name});
+app.get("/theater/:id",async(request,response)=>{
+    const{id}=request.params
+    const result= await client.db("b28wd").collection("theaters").findOne({_id:ObjectId(id)});
 
     result?response.send(result):response.status(404).send({message:"no theather of this name"})
 })
