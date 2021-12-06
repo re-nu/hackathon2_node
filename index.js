@@ -49,7 +49,7 @@ app.get("/theater/:id",async(request,response)=>{
     const{id}=request.params
     const result= await client.db("b28wd").collection("theaters").findOne({_id:ObjectId(id)});
 
-    result?response.send(result):response.status(404).send({message:"no theather of this name"})
+    result?response.send(result):response.status(404).send({message:"no theater of this name"})
 })
 
 app.put("/theater/:id",async(request,response)=>{
@@ -66,7 +66,7 @@ app.post("/Add-theater",async(request,response)=>{
     response.send(result);
 })
 
-app.delete("/delete-theater/:id",async(request,response)=>{
+app.delete("/theater/:id",async(request,response)=>{
     const{id}=request.params;
 sa
     const result=await client.db("b28wd").collection("theaters").deleteOne({_id:ObjectID(id)});
