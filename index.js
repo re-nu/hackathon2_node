@@ -52,10 +52,10 @@ app.get("/theater/:id",async(request,response)=>{
     result?response.send(result):response.status(404).send({message:"no theather of this name"})
 })
 
-app.put("/theater/:name",async(request,response)=>{
-    const{name}=request.params;
+app.put("/theater/:id",async(request,response)=>{
+    const{id}=request.params;
     const data=request.body;
-    const result= await client.db("b28wd").collection("theaters").updateOne({name:name},{$set:data});
+    const result= await client.db("b28wd").collection("theaters").updateOne({_id:ObjectId(id)},{$set:data});
     response.send(result);
 })
 
