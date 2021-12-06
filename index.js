@@ -1,6 +1,7 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { ObjectID } from 'bson';
 
 // https://hackaton2-node.herokuapp.com/  api url
@@ -10,6 +11,8 @@ dotenv.config(); //all keys it will put in process.env
 const app=express();
 
 const PORT=process.env.PORT;
+
+app.use(cors());
 
 app.use(express.json()) //inbuild middleware every request in app body is parse as json
 
