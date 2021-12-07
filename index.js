@@ -1,8 +1,9 @@
-import express from 'express';
+import express, { request, response } from 'express';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { ObjectId, ObjectID } from 'bson';
+import bcrypt from 'bcrypt';
+import { ObjectId} from 'bson';
 
 // https://hackaton2-node.herokuapp.com/  api url
 
@@ -59,6 +60,15 @@ app.put("/theater/:id",async(request,response)=>{
     response.send(result);
 })
 
+app.put("/add-movies/:name",async(request,response)=>{
+    const{name}=request.params;
+    const data=request.body;
+
+    const result= await client.db("b28wd").collection("theaters").updateOne({name:name},{$push:{movies:data}});
+    console.log(result);
+    response.send(result);
+})
+
 app.post("/Add-theater",async(request,response)=>{
     const data=request.body
 
@@ -72,5 +82,58 @@ app.delete("/theater/:id",async(request,response)=>{
     const result=await client.db("b28wd").collection("theaters").deleteOne({_id:ObjectId(id)});
     response.send(result);
 })
+
+app.post("/user/signup",async(request,response)=>{
+    const {username,password}=request.body
+    
+    const userFound= await getUserById(username);//returns null if user is not present/found
+
+    if(userFound){
+        response.send({message:"user already exists"});
+        return;
+    }
+
+    const hashedPassword=await genPassword(password);
+
+    const result=await client.db("b28wd").collection("users").insertOne({username,password});
+    response.send(result);
+
+})
+
+app.post("/user/login",async(request,response)=>{
+    const{username,password}=request.body;
+
+    const userFound=await getUserById(username);
+
+    if(!userFound){
+        response.send({message:"invalid user"});
+        return
+    }
+    
+    const storePassword=userFound.password;
+
+    const ifPasswordMatch= await bcrypt.compare(password, storePassword) //compare stored password and entered pasword ,return ture if matches
+     console.log(ifPasswordMatch,"stored:",storePassword,"entered:",password)
+    // if(ifPasswordMatch){
+    //     response.send({message:"Successful login"});
+        //    return
+    // }
+    // else{
+    //     response.send({message:"invalid password"});
+    // }
+
+    response.send(userFound);
+})
+
+async function getUserById(username){
+    return await client.db("b28wd").collection("users").findOne({username:username})
+}
+
+async function genPassword(password){
+    const No_of_Rounds=10;
+    const salt=await bcrypt.genSalt(No_of_Rounds);
+    const hashedPassword=await bcrypt.hash(password,salt);
+    return hashedPassword;
+}
 
 app.listen(PORT,()=>{console.log("App started in PORT:",PORT)});
